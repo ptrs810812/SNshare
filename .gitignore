@@ -1,5 +1,4 @@
 
-*.png
 .vs/SNshare/v15/.suo
 .vs/SNshare/v15/Browse.VC.db
 .vs/SNshare/v15/Browse.VC.opendb
@@ -21,3 +20,10 @@
 .vs/SNshare/v15/ipch/AutoPCH/f15a7d45da9a7576/WIN32.ipch
 .vs/SNshare/v15/ipch/AutoPCH/faf66fde8b7ee781/MAIN.ipch
 .vs/SNshare/v15/ipch/AutoPCH/ffc2cc190154edeb/IMGUI.ipch
+readme/1.png
+readme/2.png
+readme/3.png
+readme/4.png
+readme/5.png
+readme/6.png
+readme/7.png
