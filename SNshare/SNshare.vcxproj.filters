@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="來源檔案">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="標頭檔">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="資源檔">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{0b05a48d-28fe-4924-b6fd-fc24dd5d5580}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gl3w">
+      <UniqueIdentifier>{5d13d6d5-0597-4270-86e9-371c64b668aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mysql_connector">
+      <UniqueIdentifier>{36e31e9f-3826-471b-84e2-a534923e4653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mysql_connector\cppconn">
+      <UniqueIdentifier>{c5658419-8978-4277-808a-db94ff705b3b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_glfw_gl3.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="..\imgui\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\imgui\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\imgui\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\gl3w\GL\gl3w.c">
+      <Filter>gl3w</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="imgui_impl_glfw_gl3.h">
+      <Filter>來源檔案</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imgui\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imgui\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\imgui\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\gl3w\GL\gl3w.h">
+      <Filter>gl3w</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\gl3w\GL\glcorearb.h">
+      <Filter>gl3w</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\mysql_connection.h">
+      <Filter>mysql_connector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\mysql_driver.h">
+      <Filter>mysql_connector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\mysql_error.h">
+      <Filter>mysql_connector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\build_config.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\config.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\connection.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\datatype.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\driver.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\exception.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\metadata.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\parameter_metadata.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\prepared_statement.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\resultset.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\resultset_metadata.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\sqlstring.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\statement.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\variant.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\version_info.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\mysqlconnector\include\cppconn\warning.h">
+      <Filter>mysql_connector\cppconn</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

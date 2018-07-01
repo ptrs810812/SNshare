@@ -1,0 +1,17 @@
+﻿  main.cpp
+c:\program files\mysql\connector c++ 1.1\include\cppconn\sqlstring.h(45): warning C4251: 'sql::SQLString::realStr': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' 必須有 DLL 介面，才能被為 class 'sql::SQLString' 的用戶端使用
+  d:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\xstring(4347): note: 請參閱 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' 的宣告
+c:\program files\mysql\connector c++ 1.1\include\cppconn\exception.h(78): warning C4251: 'sql::SQLException::sql_state': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' 必須有 DLL 介面，才能被為 class 'sql::SQLException' 的用戶端使用
+  d:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\xstring(4347): note: 請參閱 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' 的宣告
+c:\program files\mysql\connector c++ 1.1\include\cppconn\exception.h(162): warning C4251: 'sql::SQLUnsupportedOptionException::option': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' 必須有 DLL 介面，才能被為 struct 'sql::SQLUnsupportedOptionException' 的用戶端使用
+  d:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\xstring(4347): note: 請參閱 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' 的宣告
+c:\program files\mysql\connector c++ 1.1\include\mysql_connection.h(181): warning C4251: 'sql::mysql::MySQL_Connection::proxy': class 'boost::shared_ptr<sql::mysql::NativeAPI::NativeConnectionWrapper>' 必須有 DLL 介面，才能被為 class 'sql::mysql::MySQL_Connection' 的用戶端使用
+  c:\program files\mysql\connector c++ 1.1\include\mysql_connection.h(181): note: 請參閱 'boost::shared_ptr<sql::mysql::NativeAPI::NativeConnectionWrapper>' 的宣告
+c:\program files\mysql\connector c++ 1.1\include\mysql_connection.h(185): warning C4251: 'sql::mysql::MySQL_Connection::service': class 'boost::scoped_ptr<sql::mysql::MySQL_Statement>' 必須有 DLL 介面，才能被為 class 'sql::mysql::MySQL_Connection' 的用戶端使用
+  c:\program files\mysql\connector c++ 1.1\include\mysql_connection.h(185): note: 請參閱 'boost::scoped_ptr<sql::mysql::MySQL_Statement>' 的宣告
+c:\program files\mysql\connector c++ 1.1\include\mysql_connection.h(187): warning C4251: 'sql::mysql::MySQL_Connection::intern': class 'boost::scoped_ptr<sql::mysql::MySQL_ConnectionData>' 必須有 DLL 介面，才能被為 class 'sql::mysql::MySQL_Connection' 的用戶端使用
+  c:\program files\mysql\connector c++ 1.1\include\mysql_connection.h(187): note: 請參閱 'boost::scoped_ptr<sql::mysql::MySQL_ConnectionData>' 的宣告
+c:\users\天行\source\repos\snshare\snshare\main.cpp(207): warning C4312: '類型轉換': 將 'unsigned int' 轉換為較大的 'void *'
+c:\users\天行\source\repos\snshare\snshare\main.cpp(236): warning C4312: '類型轉換': 將 'unsigned int' 轉換為較大的 'void *'
+c:\users\天行\source\repos\snshare\snshare\main.cpp(240): warning C4312: '類型轉換': 將 'unsigned int' 轉換為較大的 'void *'
+  SNshare.vcxproj -> C:\Users\天行\source\repos\SNshare\x64\Debug\SNshare.exe
