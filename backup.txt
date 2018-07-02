@@ -34,26 +34,30 @@ struct search_list
 {
 	std::string event_name;
 	std::vector<std::string> item_name;
+	void clear()
+	{
+		event_name.clear();
+		item_name.clear();
+	}
 };
 //int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)
 int main()
 {
-
 	sql::Driver *driver;
 	static sql::Connection *con;
 	static sql::Statement *stmt;
 	sql::ResultSet *res;
 	static std::vector<search_list> list;
 	static int event_inuse = 0, item_inuse = 0;
-	std::string serial_number;
+	std::string serial_number,last_serial_number="";
 	static int primary_key;
 	try {
 		// create link to mysql
 		driver = get_driver_instance();
-		con = driver->connect("192.168.1.104:3306", "mabi_sn_share_ptrs", "mabi_sn_share_pass");
+		con = driver->connect("122.116.232.94:3306", "mabi_sn_share_ptrs", "mabi_sn_share_pass");
+
 		con->setSchema("mabi");
 		stmt = con->createStatement();
-		//res = stmt->executeQuery(u8"SELECT * FROM `sn_share` where item_name = '錫古飛行娃娃'");
 		res = stmt->executeQuery(u8"SELECT distinct event_name FROM sn_share");
 		while (res->next())
 		{
@@ -61,12 +65,12 @@ int main()
 			temp.event_name = res->getString("event_name").c_str();				//initialize all evnet_names
 			list.push_back(temp);
 		}
-		
+
 		std::stringstream ss;
 		for (int i = 0; i < list.size(); i++)
 		{
 			ss.str("");
-			ss << u8"SELECT distinct item_name FROM sn_share where event_name = '" << list[i].event_name.c_str() << "'";
+			ss << u8"SELECT distinct item_name FROM sn_share where event_name = '" << list[i].event_name.c_str() << "' order by item_name;";
 			res = stmt->executeQuery(ss.str().c_str());
 			while (res->next())
 			{
@@ -109,15 +113,7 @@ int main()
 
 	// Load image
 	int w, h, nrChannels;
-	unsigned char *data = stbi_load("../pic/1.png", &w, &h, &nrChannels, 0);
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	stbi_image_free(data);
-
-	data = stbi_load("../pic/login.png", &w, &h, &nrChannels, 0);
+	unsigned char *data = stbi_load("./pic/refresh.png", &w, &h, &nrChannels, 0);
 	unsigned int texture_login;
 	glGenTextures(1, &texture_login);
 	glBindTexture(GL_TEXTURE_2D, texture_login);
@@ -125,7 +121,7 @@ int main()
 	glGenerateMipmap(GL_TEXTURE_2D);
 	stbi_image_free(data);
 
-	data = stbi_load("../pic/get.png", &w, &h, &nrChannels, 0);
+	data = stbi_load("./pic/get.png", &w, &h, &nrChannels, 0);
 	unsigned int texture_get;
 	glGenTextures(1, &texture_get);
 	glBindTexture(GL_TEXTURE_2D, texture_get);
@@ -133,7 +129,7 @@ int main()
 	glGenerateMipmap(GL_TEXTURE_2D);
 	stbi_image_free(data);
 
-	data = stbi_load("../pic/share.png", &w, &h, &nrChannels, 0);
+	data = stbi_load("./pic/share.png", &w, &h, &nrChannels, 0);
 	unsigned int texture_share;
 	glGenTextures(1, &texture_share);
 	glBindTexture(GL_TEXTURE_2D, texture_share);
@@ -142,7 +138,7 @@ int main()
 	stbi_image_free(data);
 
 
-	
+
 
 
 	//can use it to set window position when window not decorated
@@ -153,14 +149,24 @@ int main()
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
 	//enable show chinese
-	io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\msjh.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());//微軟正黑
+	
 
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
+	if (io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\msjh.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull())) {}			//微軟正黑
+	else if (io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\mingliu.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull())) {}	//新細明
+	else if (io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\arialuni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull())) {}	//arial
+	else if (io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\msgothic.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull())) {}
+	{
+		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\kaiu.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());				//標楷
+	}
+	
+																													 //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
+																													 //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
 	ImGui_ImplGlfwGL3_Init(window, true);
 
 	// Setup style
-	ImGui::StyleColorsLight();
+	//ImGui::StyleColorsLight();
+	ImGui::StyleColorsClassic();
+	//ImGui::StyleColorsDark();
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_ScrollbarRounding, 0.0f);
@@ -176,7 +182,8 @@ int main()
 
 	bool show_get_button = false;
 	bool show_serial_number = false;
-	
+	static const char* type_sel = list[0].event_name.c_str();
+
 	// Main loop
 	while (!glfwWindowShouldClose(window) & show_main_window)
 	{
@@ -187,292 +194,331 @@ int main()
 		glfwPollEvents();
 		ImGui_ImplGlfwGL3_NewFrame();
 
-		
+
 		// 1. Show a simple window.
 		// Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets automatically appears in a window called "Debug".
-		if(show_main_window){
+		if (show_main_window) {
 			ImGuiWindowFlags main_flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar |
 				ImGuiWindowFlags_NoTitleBar;
 			ImGuiWindowFlags share_flag = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
-		ImGui::Begin("window", &show_main_window, main_flags);
-		ImGui::SetWindowSize(IMGUI_WINDOW_SIZE, true);
-		ImGui::SetWindowPos(ImVec2(0, 0), true);
+			ImGui::Begin("window", &show_main_window, main_flags);
+			ImGui::SetWindowSize(IMGUI_WINDOW_SIZE, true);
+			ImGui::SetWindowPos(ImVec2(0, 0), true);
 
-		ImGuiColumnsFlags main_cloumn_flags = ImGuiColumnsFlags_NoResize;
-		ImGui::Columns(2, "main_column", true, main_cloumn_flags);  // 2-ways, with border
-		ImGui::SetColumnWidth(0, 60);	//this column for: login, get sn, share sn
+			ImGuiColumnsFlags main_cloumn_flags = ImGuiColumnsFlags_NoResize;
+			ImGui::Columns(2, "main_column", true, main_cloumn_flags);  // 2-ways, with border
+			ImGui::SetColumnWidth(0, 60);	//this column for: login, get sn, share sn
 
-		// Image button
-		{
-			ImVec2 buttonsize = { 40.0f,40.0f };
-			if (ImGui::ImageButton((void*)texture_login, buttonsize, ImVec2(0, 0), ImVec2(1, 1)))
+											// Image button
 			{
-				show_login_child = true; show_copy_child = false; show_share_child = false;
-			}
-			if (ImGui::ImageButton((void*)texture_get, buttonsize, ImVec2(0, 0), ImVec2(1, 1)))
-			{
-				show_login_child = false; show_copy_child = true; show_share_child = false;
-			}
-			if (ImGui::ImageButton((void*)texture_share, buttonsize, ImVec2(0, 0), ImVec2(1, 1)))
-			{
-				show_login_child = false; show_copy_child = false; show_share_child = true;
-			}
-		}
-
-		ImGui::NextColumn();
-		if (show_login_child == true)											//leave for login function
-		{
-			ImGui::BeginChild("login", ImVec2(0, 0), true, main_flags);
-			ImGui::Text("this is login\n");
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
-			/*for (int i = 0; i < list.size(); i++)
-			{
-				ImGui::Text(u8"%s", list[i].event_name.c_str());
-			}
-			for (int i = 0; i < list[1].item_name.size(); i++)
-			{
-				ImGui::Text(u8"%s", list[1].item_name[i].c_str());
-			}*/
-			std::stringstream ss;
-			for (int i = 0; i < list.size(); i++)
-			{
-				ss.str("");
-				ss << u8"SELECT distinct item_name FROM sn_share where event_name = '" << list[i].event_name.c_str() << "'";
-				ImGui::Text(u8"%s", ss.str().c_str());
-			}
-
-			ImGui::EndChild();
-		}
-		else if (show_copy_child == true)
-		{
-
-			ImGui::BeginChild("copy", ImVec2(0, 0), true, main_flags);
-			ImGui::Columns(2,"copy_column",true,main_cloumn_flags);
-			ImGui::SetColumnWidth(0, 280);
-			// Type
-			{
-				ImGuiComboFlags type_flags = 0;
-				static const char* type_sel = list[0].event_name.c_str();
-				if (ImGui::BeginCombo("type", type_sel, type_flags, false, 265.0f))
+				ImVec2 buttonsize = { 40.0f,40.0f };
+				if (ImGui::ImageButton((void*)texture_login, buttonsize, ImVec2(0, 0), ImVec2(1, 1)))
 				{
-					for (int n = 0; n < list.size(); n++)
+					show_login_child = false; show_copy_child = true; show_share_child = false;
+
+					list.clear();
+					res = stmt->executeQuery(u8"SELECT distinct event_name FROM sn_share");
+					while (res->next())
 					{
-						bool is_selected = (type_sel == list[n].event_name.c_str());
-						if (ImGui::Selectable(list[n].event_name.c_str(), is_selected))
-						{
-							type_sel = list[n].event_name.c_str();
-							event_inuse = n;
-						}
-						if (is_selected)
-							ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+						search_list temp;
+						temp.event_name = res->getString("event_name").c_str();				//initialize all evnet_names
+						list.push_back(temp);
 					}
-					ImGui::EndCombo();
+
+					std::stringstream ss;
+					for (int i = 0; i < list.size(); i++)
+					{
+						ss.str("");
+						ss << u8"SELECT distinct item_name FROM sn_share where event_name = '" << list[i].event_name.c_str() << "' order by item_name;";
+						res = stmt->executeQuery(ss.str().c_str());
+						while (res->next())
+						{
+							std::string temp;
+							temp = res->getString("item_name").c_str();
+							list[i].item_name.push_back(temp);
+						}
+					}
+					type_sel = list[0].event_name.c_str();
+					delete res;
+				}
+				if (ImGui::ImageButton((void*)texture_get, buttonsize, ImVec2(0, 0), ImVec2(1, 1)))
+				{
+					show_login_child = false; show_copy_child = true; show_share_child = false;
+				}
+				if (ImGui::ImageButton((void*)texture_share, buttonsize, ImVec2(0, 0), ImVec2(1, 1)))
+				{
+					show_login_child = false; show_copy_child = false; show_share_child = true;
 				}
 			}
-			// item
+
+			ImGui::NextColumn();
+			if (show_login_child == true)											//leave for login function, now is refresh list
 			{
-				ImGui::BeginChild("item_list", ImVec2(-1, -1), true, share_flag);
-				for (int i = 0; i < list[event_inuse].item_name.size(); i++)
+				/*ImGui::BeginChild("login", ImVec2(0, 0), true, main_flags);
+				ImGui::Text("this is login\n");
+				//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+				std::stringstream ss;
+				for (int i = 0; i < list.size(); i++)
 				{
-					if (ImGui::Button(list[event_inuse].item_name[i].c_str(), ImVec2(-1, 25)))
+					ss.str("");
+					ss << u8"SELECT distinct item_name FROM sn_share where event_name = '" << list[i].event_name.c_str() << "'";
+					ImGui::Text(u8"%s", ss.str().c_str());
+				}
+
+				ImGui::EndChild();*/
+				
+			}
+			else if (show_copy_child == true)
+			{
+
+				ImGui::BeginChild("copy", ImVec2(0, 0), true, main_flags);
+				ImGui::Columns(2, "copy_column", true, main_cloumn_flags);
+				ImGui::SetColumnWidth(0, 280);
+				// Type
+				{
+					ImGuiComboFlags type_flags = 0;
+					type_sel = list[0].event_name.c_str();
+					if (ImGui::BeginCombo("type", type_sel, type_flags, false, 265.0f))
 					{
-						show_get_button = true;
-						show_serial_number = false;
-						std::stringstream ss;
-						ss.str("");
-						if (show_get_button==true)
+						item_inuse = 0;
+						for (int n = 0; n < list.size(); n++)
 						{
-							ss << "SELECT * FROM mabi.sn_share where event_name = '" << list[event_inuse].event_name << "'and item_name = '" 
-								<< list[event_inuse].item_name[i].c_str() << "' and used = b'0' limit 1;";
-							res = stmt->executeQuery(ss.str().c_str());
-							while (res->next())
+							bool is_selected = (type_sel == list[n].event_name.c_str());
+							if (ImGui::Selectable(list[n].event_name.c_str(), is_selected))
 							{
-								serial_number = res->getString("serial_number").c_str();
-								primary_key = res->getInt("sn_id");
+								type_sel = list[n].event_name.c_str();
+								event_inuse = n;
 							}
-							item_inuse = i;
+							if (is_selected)
+							{
+								ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+								show_get_button = false;
+								show_serial_number = false;
+							}
+						}
+						ImGui::EndCombo();
+					}
+				}
+				// item
+				{
+					ImGui::BeginChild("item_list", ImVec2(-1, -1), true, share_flag);
+					for (int i = 0; i < list[event_inuse].item_name.size(); i++)
+					{
+						if (ImGui::Button(list[event_inuse].item_name[i].c_str(), ImVec2(-1, 25)))
+						{
+							show_get_button = true;
+							show_serial_number = false;
+							std::stringstream ss;
+							ss.str("");
+							if (show_get_button == true)
+							{
+								//SELECT IFNULL( (SELECT field1 FROM table WHERE id = 123 LIMIT 1) ,'not found');
+								ss << "SELECT  * FROM mabi.sn_share where event_name = '" << list[event_inuse].event_name << "'and item_name = '"
+									<< list[event_inuse].item_name[i].c_str() << "' and used = b'0' limit 1;";
+								res = stmt->executeQuery(ss.str().c_str());
+								while (res->next())
+								{
+									serial_number = res->getString("serial_number").c_str();
+									primary_key = res->getInt("sn_id");
+								}
+								if (serial_number == last_serial_number)
+								{
+									serial_number = u8"無剩餘序號";
+								}
+								else
+								{
+									last_serial_number = serial_number;
+								}
+								item_inuse = i;
+							}
+						}
+						//SELECT serial_number FROM mabi.sn_share where event_name = '13th週年慶農場物語' and  item_name = '祝福藥水x10' limit 1;
+
+					}
+					ImGui::EndChild();
+				}
+				ImGui::NextColumn();
+				ImGui::BeginChild("SNlist", ImVec2(0, 0), true, main_flags);
+				{
+					ImGui::Columns(2, "SNlistname_cloumn", true, main_cloumn_flags);
+					ImGui::Text(u8"道具名稱");
+					ImGui::NextColumn();
+					ImGui::Text(u8"序號");
+					ImGui::EndColumns();
+					ImGui::Separator();
+					if (show_get_button || show_serial_number)
+					{
+						if (!show_serial_number)
+						{
+							if ((ImGui::Button(u8"領取序號", ImVec2(-1, -1))))
+							{
+								show_get_button = false;
+								show_serial_number = true;
+								//UPDATE mabi.`sn_share` SET `used`='1' WHERE `sn_id`='68';
+								std::stringstream ss;
+								ss << "UPDATE `sn_share` SET `used`=b'1' WHERE `sn_id`=" << primary_key;
+								stmt->execute(ss.str().c_str());
+							}
+						}
+						else
+						{
+							ImGui::Columns(2, "SNlist_cloumn", true, main_cloumn_flags);
+							ImGui::Text(u8"%s", list[event_inuse].item_name[item_inuse].c_str());
+							ImGui::NextColumn();
+							ImGui::Text(u8"%s", serial_number.c_str());
+							ImGui::EndColumns();
+
+							if (ImGui::Button("copy", ImVec2(-1, -1)))
+							{
+								if (serial_number != u8"無剩餘序號")
+								{
+									OpenClipboard(0);
+									EmptyClipboard();
+									HGLOBAL hg = GlobalAlloc(GMEM_MOVEABLE, serial_number.size() + 1);
+									memcpy(GlobalLock(hg), serial_number.c_str(), serial_number.size() + 1);
+									GlobalUnlock(hg);
+									SetClipboardData(CF_TEXT, hg);
+									CloseClipboard();
+									GlobalFree(hg);
+								}
+
+								show_get_button = false;
+								show_serial_number = false;
+							}
 						}
 					}
-					//SELECT serial_number FROM mabi.sn_share where event_name = '13th週年慶農場物語' and  item_name = '祝福藥水x10' limit 1;
+
+
 
 				}
 				ImGui::EndChild();
-			}
-			ImGui::NextColumn();
-			ImGui::BeginChild("SNlist", ImVec2(0, 0), true, main_flags);
-			{
-				ImGui::Columns(2,"SNlistname_cloumn",true,main_cloumn_flags);
-				ImGui::Text(u8"道具名稱");
-				ImGui::NextColumn();
-				ImGui::Text(u8"序號");
-				ImGui::EndColumns();
-				ImGui::Separator();
-				if (show_get_button||show_serial_number)
-				{
-					if (!show_serial_number)
-					{
-						if ((ImGui::Button(u8"領取序號", ImVec2(-1, -1))))
-						{
-							show_get_button = false;
-							show_serial_number = true;
-						}
-					}
-					else
-					{
-						ImGui::Columns(2, "SNlist_cloumn", true, main_cloumn_flags);
-						ImGui::Text(u8"%s", list[event_inuse].item_name[item_inuse].c_str());
-						ImGui::NextColumn();
-						ImGui::Text(u8"%s", serial_number.c_str());
-
-						//UPDATE mabi.`sn_share` SET `used`='1' WHERE `sn_id`='68';
-						std::stringstream ss;
-						ss << "UPDATE `sn_share` SET `used`=b'1' WHERE `sn_id`=" << primary_key;
-						stmt->execute(ss.str().c_str());
-						
-					}
-				}
-
-
+				ImGui::EndChild();
 
 			}
-			ImGui::EndChild();
-			ImGui::EndChild();
-
-		}
-		else if (show_share_child == true)
-		{
-			static std::vector<std::string> store1;
-			static char text[200 * 20];
-			if (ImGui::Button(u8"新增序號"))	show_share_text = true;
-			ImGui::SameLine();
-			if (ImGui::Button(u8"確認")||show_share_text==false)
+			else if (show_share_child == true)
 			{
-				show_share_text = false;
+				static std::vector<std::string> store1;
+				static char text[200 * 100];
+				if (ImGui::Button(u8"新增序號"))	show_share_text = true;
 				ImGui::SameLine();
-				if (ImGui::Button(u8"送出"))	//clear text and send to mysql
+				if (ImGui::Button(u8"確認") || show_share_text == false)
 				{
-					std::string command;
-					for (int i = 0; i < store1.size(); i=i+3)
+					show_share_text = false;
+					ImGui::SameLine();
+					if (ImGui::Button(u8"送出"))	//clear text and send to mysql
 					{
-
-						//INSERT INTO mabi.`sn_share` (serial_number, event_name, item_name, sn_id) VALUES('G1GWNJ0ZT199HCKNRU', '祝福藥水x10', '13th週年慶農場物語', now());
-
-						try
+						std::string command;
+						for (int i = 0; i < store1.size(); i = i + 3)
 						{
-							command += "INSERT INTO `sn_share` (serial_number, item_name, event_name) VALUES ('";
-							command += store1[i + 2];
-							command += "', '";
-							command += store1[i + 1];
-							command += "', '";
-							command += store1[i];
-							command += "');";
-							//std::cout << command << "\n";
-							stmt->execute(command.c_str());
-							command.clear();
+							//INSERT INTO mabi.`sn_share` (serial_number, event_name, item_name, sn_id) VALUES('G1GWNJ0ZT199HCKNRU', '祝福藥水x10', '13th週年慶農場物語', now());
+
+							try
+							{
+								command += "INSERT INTO `sn_share` (serial_number, item_name, event_name) VALUES ('";
+								command += store1[i + 2];
+								command += "', '";
+								command += store1[i + 1];
+								command += "', '";
+								command += store1[i];
+								command += "');";
+								//std::cout << command << "\n";
+								stmt->execute(command.c_str());
+								command.clear();
+							}
+							catch (sql::SQLException &e)
+							{
+								std::cout << "# ERR:SQLException in" << __FILE__;
+								std::cout << "(" << __FUNCTION__ << ") on line "
+									<< __LINE__ << "\n";
+								std::cout << "# ERR: " << e.what();
+								std::cout << " (MySQL error code: " << e.getErrorCode();
+								std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
+								if (e.getErrorCode() == 1062)	std::cout << "same sn \n";
+							}
 						}
-						catch (sql::SQLException &e)
+						if (show_share_text == false)
 						{
-							std::cout << "# ERR:SQLException in" << __FILE__;
-							std::cout << "(" << __FUNCTION__ << ") on line "
-								<< __LINE__ << "\n";
-							std::cout << "# ERR: " << e.what();
-							std::cout << " (MySQL error code: " << e.getErrorCode();
-							std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
-							if (e.getErrorCode() == 1062)	std::cout << "same sn \n";
+							memset(text, NULL, sizeof(text));
+							store1.clear();
 						}
 					}
-					if (show_share_text == false)
-					{
-						memset(text, NULL, sizeof(text));
-						store1.clear();
-					}
 				}
-			}
-			ImGui::BeginChild("share", ImVec2(0, 0), true, share_flag);
+				ImGui::BeginChild("share", ImVec2(0, 0), true, share_flag);
 
-			if (show_share_text)
-			{
-				ImGui::InputTextMultiline("##source", text, IM_ARRAYSIZE(text), ImVec2(-1, -1), ImGuiInputTextFlags_AllowTabInput);
-
-				std::vector<std::string> store;
-				std::string str(text);
-				std::string sub;
-				int count = 0;					// separate string count
-				int k = 0;						// separate string start #
-				for (unsigned int i = 0; i < str.size(); i++)
+				if (show_share_text)
 				{
-					if (str[i] == '\t' || str[i] == '\n')
+					ImGui::InputTextMultiline("##source", text, IM_ARRAYSIZE(text), ImVec2(-1, -1), ImGuiInputTextFlags_AllowTabInput);
+
+					std::vector<std::string> store;
+					std::string str(text);
+					std::string sub;
+					int count = 0;					// separate string count
+					int k = 0;						// separate string start #
+					for (unsigned int i = 0; i < str.size(); i++)
 					{
-						//std::cout << "find tab "<<count<<"\n";
-						std::string sep;
-						for (unsigned int j = k; j < i; j++)
+						if (str[i] == '\t' || str[i] == '\n')
 						{
-							sep += str[j];
+							std::string sep;
+							for (unsigned int j = k; j < i; j++)
+							{
+								sep += str[j];
+							}
+							k = i + 1;
+							if (count == 0 || count == 1 || count == 2)	//0:SN 1:event_name 2:item_name
+							{
+								store.push_back(sep);
+							}
+							count++;
+							sep.clear();
 						}
-						//std::cout << sep << "\n";
-						k = i + 1;
-						if (count == 0 || count == 1 || count == 2)	//0:SN 1:event_name 2:item_name
-						{
-							store.push_back(sep);
-						}
-						count++;
-						sep.clear();
+						if (count == 6)	count = 0;
 					}
-					if (count == 6)	count = 0;
-				}
 
 
-				store1 = store;
+					store1 = store;
 
-				for (unsigned int i = 0; i < store.size(); i++)
-				{
-					const char *testa = store[i].c_str();
-					ImGui::Text(testa);
-				}
-			}
-			else
-			{
-				ImGui::Columns(2, "SNlist_cloumn", true, main_cloumn_flags);
-				ImGui::Text(u8"道具名稱");
-				ImGui::NextColumn();
-				ImGui::Text(u8"序號");
-				ImGui::NextColumn();
-				ImGui::Separator();
-				
-				for (unsigned int i = 0; i < store1.size(); i++)
-				{
-					//std::cout << store1[i] << " " << i%3 << "\n";
-					if (i % 3 == 1 || i % 3 == 2)
+					for (unsigned int i = 0; i < store.size(); i++)
 					{
-						const char *testa = store1[i].c_str();
+						const char *testa = store[i].c_str();
 						ImGui::Text(testa);
-						ImGui::NextColumn();
-						if (i % 3 == 2)	ImGui::Separator();
 					}
 				}
+				else
+				{
+					ImGui::Columns(2, "SNlist_cloumn", true, main_cloumn_flags);
+					ImGui::Text(u8"道具名稱");
+					ImGui::NextColumn();
+					ImGui::Text(u8"序號");
+					ImGui::NextColumn();
+					ImGui::Separator();
+
+					for (unsigned int i = 0; i < store1.size(); i++)
+					{
+						if (i % 3 == 1 || i % 3 == 2)
+						{
+							const char *testa = store1[i].c_str();
+							ImGui::Text(testa);
+							ImGui::NextColumn();
+							if (i % 3 == 2)	ImGui::Separator();
+						}
+					}
+				}
+				ImGui::EndChild();
 			}
-			//ImGui::Text("size = %d", store.size());
-			ImGui::EndChild();
+
+
+			ImGui::End();
 		}
-	
-
-		ImGui::End();
-		}
-
-
 
 		// Rendering
 		int display_w, display_h;
 		glfwGetFramebufferSize(window, &display_w, &display_h);
 		glViewport(0, 0, display_w, display_h);
 
-
 		glEnable(GL_BLEND);
 		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		//gl transparent bg
 
 		ImGui::Render();
 		ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
@@ -488,7 +534,7 @@ int main()
 
 	delete stmt;
 	delete con;
-	
+
 
 	return 0;
 }
