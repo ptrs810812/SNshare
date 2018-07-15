@@ -1,18 +1,4 @@
-﻿  main.cpp
-c:\program files\mysql\mysql-connector-c++-noinstall-1.0.5-win32-vs2005\include\cppconn\exception.h(47): warning C4251: 'sql::SQLException::sql_state': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' 必須有 DLL 介面，才能被為 class 'sql::SQLException' 的用戶端使用
-  d:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\xstring(4347): note: 請參閱 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' 的宣告
-c:\users\天行\source\repos\snshare\snshare\main.cpp(69): warning C4018: '<': signed/unsigned 不相符
-c:\users\天行\source\repos\snshare\snshare\main.cpp(228): warning C4018: '<': signed/unsigned 不相符
-c:\users\天行\source\repos\snshare\snshare\main.cpp(284): warning C4018: '<': signed/unsigned 不相符
-c:\users\天行\source\repos\snshare\snshare\main.cpp(305): warning C4018: '<': signed/unsigned 不相符
-c:\users\天行\source\repos\snshare\snshare\main.cpp(411): warning C4018: '<': signed/unsigned 不相符
-  正在產生程式碼
-  1 of 1396 functions (<0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
-  已完成程式碼產生
-glfw3.lib(context.obj) : warning LNK4049: 本機定義的符號 _sscanf 已匯入
-glfw3.lib(init.obj) : warning LNK4049: 本機定義的符號 _vsnprintf 已匯入
-MSVCRT.lib(vsnprintf.obj) : warning LNK4049: 本機定義的符號 _vsnprintf 已匯入
-MSVCRT.lib(vsnprintf.obj) : warning LNK4049: 本機定義的符號 __vsnprintf 已匯入
-  SNshare.vcxproj -> C:\Users\天行\source\repos\SNshare\Release\SNshare.exe
+﻿main.obj : error LNK2001: 無法解析的外部符號 __imp__get_driver_instance
+main.obj : error LNK2001: 無法解析的外部符號 "__declspec(dllimport) public: int __thiscall sql::SQLException::getErrorCode(void)const " (__imp_?getErrorCode@SQLException@sql@@QBEHXZ)
+main.obj : error LNK2001: 無法解析的外部符號 "__declspec(dllimport) public: char const * __thiscall sql::SQLException::getSQLState(void)const " (__imp_?getSQLState@SQLException@sql@@QBEPBDXZ)
+C:\Users\天行\source\repos\SNshare\Release\SNshare.exe : fatal error LNK1120: 3 個無法解析的外部符號

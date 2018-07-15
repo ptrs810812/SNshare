@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <sys/stat.h>
+
 
 #include <stdlib.h>
 #include <cppconn/driver.h>
@@ -55,7 +57,6 @@ int main()
 		// create link to mysql
 		driver = get_driver_instance();
 		con = driver->connect("122.116.232.94:3306", "mabi_sn_share_ptrs", "mabi_sn_share_pass");
-
 		con->setSchema("mabi");
 		stmt = con->createStatement();
 		res = stmt->executeQuery(u8"SELECT distinct event_name FROM sn_share");
@@ -150,13 +151,23 @@ int main()
 
 	//enable show chinese
 	
-
-	if (io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\msjh.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull())) {}			//微軟正黑
-	else if (io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\mingliu.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull())) {}	//新細明
-	else if (io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\arialuni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull())) {}	//arial
-	else if (io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\msgothic.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull())) {}
+	struct stat buf;
+	if (stat("c:\\Windows\\Fonts\\msjh.ttc", &buf) != -1)
 	{
-		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\kaiu.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());				//標楷
+		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\msjh.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());			//微軟正黑
+	}
+
+	else if (stat("c:\\Windows\\Fonts\\mingliu.ttc", &buf) != -1)
+	{
+		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\mingliu.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());		//新細明
+	}
+	else if (stat("c:\\Windows\\Fonts\\arialuni.ttf", &buf) != -1)
+	{
+		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\arialuni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());		//airal
+	}
+	else if (stat("c:\\Windows\\Fonts\\kaiu.ttf.ttf", &buf) != -1)
+	{
+		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\kaiu.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());			//標楷
 	}
 	
 																													 //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
@@ -182,7 +193,11 @@ int main()
 
 	bool show_get_button = false;
 	bool show_serial_number = false;
-	static const char* type_sel = list[0].event_name.c_str();
+
+	bool format_beanfun = false;
+	bool format_1_to_1 = false;
+	bool format_1_to_x = false;
+	static const char* type_sel = list[list.size()-1].event_name.c_str();
 
 	// Main loop
 	while (!glfwWindowShouldClose(window) & show_main_window)
@@ -238,7 +253,7 @@ int main()
 							list[i].item_name.push_back(temp);
 						}
 					}
-					type_sel = list[0].event_name.c_str();
+					type_sel = list[list.size()-1].event_name.c_str();
 					delete res;
 				}
 				if (ImGui::ImageButton((void*)texture_get, buttonsize, ImVec2(0, 0), ImVec2(1, 1)))
@@ -278,7 +293,7 @@ int main()
 				// Type
 				{
 					ImGuiComboFlags type_flags = 0;
-					type_sel = list[0].event_name.c_str();
+					type_sel = list[list.size()-1].event_name.c_str();
 					if (ImGui::BeginCombo("type", type_sel, type_flags, false, 265.0f))
 					{
 						item_inuse = 0;
@@ -400,41 +415,111 @@ int main()
 			{
 				static std::vector<std::string> store1;
 				static char text[200 * 100];
+				static char text_event[80 * 1];
+				static char text_item[80 * 1];
 				if (ImGui::Button(u8"新增序號"))	show_share_text = true;
 				ImGui::SameLine();
 				if (ImGui::Button(u8"確認") || show_share_text == false)
 				{
+					
 					show_share_text = false;
 					ImGui::SameLine();
 					if (ImGui::Button(u8"送出"))	//clear text and send to mysql
 					{
-						std::string command;
-						for (int i = 0; i < store1.size(); i = i + 3)
+						if (format_beanfun)
 						{
-							//INSERT INTO mabi.`sn_share` (serial_number, event_name, item_name, sn_id) VALUES('G1GWNJ0ZT199HCKNRU', '祝福藥水x10', '13th週年慶農場物語', now());
+							std::string command;
+							for (int i = 0; i < store1.size(); i = i + 3)
+							{
+								//INSERT INTO mabi.`sn_share` (serial_number, event_name, item_name, sn_id) VALUES('G1GWNJ0ZT199HCKNRU', '祝福藥水x10', '13th週年慶農場物語', now());
 
-							try
-							{
-								command += "INSERT INTO `sn_share` (serial_number, item_name, event_name) VALUES ('";
-								command += store1[i + 2];
-								command += "', '";
-								command += store1[i + 1];
-								command += "', '";
-								command += store1[i];
-								command += "');";
-								//std::cout << command << "\n";
-								stmt->execute(command.c_str());
-								command.clear();
+								try
+								{
+									command += "INSERT INTO `sn_share` (serial_number, item_name, event_name) VALUES ('";
+									command += store1[i + 2];
+									command += "', '";
+									command += store1[i + 1];
+									command += "', '";
+									command += store1[i];
+									command += "');";
+									//std::cout << command << "\n";
+									stmt->execute(command.c_str());
+									command.clear();
+								}
+								catch (sql::SQLException &e)
+								{
+									std::cout << "# ERR:SQLException in" << __FILE__;
+									std::cout << "(" << __FUNCTION__ << ") on line "
+										<< __LINE__ << "\n";
+									std::cout << "# ERR: " << e.what();
+									std::cout << " (MySQL error code: " << e.getErrorCode();
+									std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
+									if (e.getErrorCode() == 1062)	std::cout << "same sn \n";
+								}
 							}
-							catch (sql::SQLException &e)
+						}
+						else if (format_1_to_1)
+						{
+							std::string command;
+							for (int i = 0; i < store1.size(); i = i + 2)
 							{
-								std::cout << "# ERR:SQLException in" << __FILE__;
-								std::cout << "(" << __FUNCTION__ << ") on line "
-									<< __LINE__ << "\n";
-								std::cout << "# ERR: " << e.what();
-								std::cout << " (MySQL error code: " << e.getErrorCode();
-								std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
-								if (e.getErrorCode() == 1062)	std::cout << "same sn \n";
+								//INSERT INTO mabi.`sn_share` (serial_number, event_name, item_name, sn_id) VALUES('G1GWNJ0ZT199HCKNRU', '祝福藥水x10', '13th週年慶農場物語', now());
+
+								try
+								{
+									command += "INSERT INTO `sn_share` (serial_number, item_name, event_name) VALUES ('";
+									command += store1[i];
+									command += "', '";
+									command += store1[i + 1];
+									command += "', '";
+									command += text_event;
+									command += "');";
+									//std::cout << command << "\n";
+									stmt->execute(command.c_str());
+									command.clear();
+								}
+								catch (sql::SQLException &e)
+								{
+									std::cout << "# ERR:SQLException in" << __FILE__;
+									std::cout << "(" << __FUNCTION__ << ") on line "
+										<< __LINE__ << "\n";
+									std::cout << "# ERR: " << e.what();
+									std::cout << " (MySQL error code: " << e.getErrorCode();
+									std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
+									if (e.getErrorCode() == 1062)	std::cout << "same sn \n";
+								}
+							}
+						}
+						else if (format_1_to_x)
+						{
+							std::string command;
+							for (int i = 0; i < store1.size(); i = i + 1)
+							{
+								//INSERT INTO mabi.`sn_share` (serial_number, event_name, item_name, sn_id) VALUES('G1GWNJ0ZT199HCKNRU', '祝福藥水x10', '13th週年慶農場物語', now());
+
+								try
+								{
+									command += "INSERT INTO `sn_share` (serial_number, item_name, event_name) VALUES ('";
+									command += store1[i];
+									command += "', '";
+									command += text_item;
+									command += "', '";
+									command += text_event;
+									command += "');";
+									//std::cout << command << "\n";
+									stmt->execute(command.c_str());
+									command.clear();
+								}
+								catch (sql::SQLException &e)
+								{
+									std::cout << "# ERR:SQLException in" << __FILE__;
+									std::cout << "(" << __FUNCTION__ << ") on line "
+										<< __LINE__ << "\n";
+									std::cout << "# ERR: " << e.what();
+									std::cout << " (MySQL error code: " << e.getErrorCode();
+									std::cout << ", SQLState: " << e.getSQLState() << " )" << "\n";
+									if (e.getErrorCode() == 1062)	std::cout << "same sn \n";
+								}
 							}
 						}
 						if (show_share_text == false)
@@ -446,63 +531,188 @@ int main()
 				}
 				ImGui::BeginChild("share", ImVec2(0, 0), true, share_flag);
 
-				if (show_share_text)
+				if (show_share_text)														//select to use which format to share sn
+																							//beanfun , 1-to-1 , 1-to-x
 				{
-					ImGui::InputTextMultiline("##source", text, IM_ARRAYSIZE(text), ImVec2(-1, -1), ImGuiInputTextFlags_AllowTabInput);
-
-					std::vector<std::string> store;
-					std::string str(text);
-					std::string sub;
-					int count = 0;					// separate string count
-					int k = 0;						// separate string start #
-					for (unsigned int i = 0; i < str.size(); i++)
+					if ((format_beanfun || format_1_to_1 || format_1_to_x) == false)
 					{
-						if (str[i] == '\t' || str[i] == '\n')
+						ImGui::Columns(3, "select_format", true, main_cloumn_flags);
+						if (ImGui::Button(u8"我要從橘子網站複製", ImVec2(-1, -1)))
 						{
-							std::string sep;
-							for (unsigned int j = k; j < i; j++)
-							{
-								sep += str[j];
-							}
-							k = i + 1;
-							if (count == 0 || count == 1 || count == 2)	//0:SN 1:event_name 2:item_name
-							{
-								store.push_back(sep);
-							}
-							count++;
-							sep.clear();
+							format_beanfun = true;
+							format_1_to_1 = false;
+							format_1_to_x = false;
 						}
-						if (count == 6)	count = 0;
+						ImGui::NextColumn();
+						if (ImGui::Button(u8"一個道具名稱對一個序號", ImVec2(-1, -1)))
+						{
+							format_beanfun = false;
+							format_1_to_1 = true;
+							format_1_to_x = false;
+						}
+						ImGui::NextColumn();
+						if (ImGui::Button(u8"一個道具名稱對多個序號", ImVec2(-1, -1)))
+						{
+							format_beanfun = false;
+							format_1_to_1 = false;
+							format_1_to_x = true;
+						}
+						ImGui::EndColumns();
 					}
-
-
-					store1 = store;
-
-					for (unsigned int i = 0; i < store.size(); i++)
+					else
 					{
-						const char *testa = store[i].c_str();
-						ImGui::Text(testa);
+						if(format_1_to_1)
+						{
+							ImGui::InputText(u8"活動名稱 請參照橘子序號兌換網頁", text_event, IM_ARRAYSIZE(text_event));
+						}
+						else if (format_1_to_x)
+						{
+							ImGui::InputText(u8"活動名稱 請參照橘子序號兌換網頁", text_event, IM_ARRAYSIZE(text_event));
+							ImGui::InputText(u8"道具名稱", text_item, IM_ARRAYSIZE(text_item));
+						}
+						ImGui::InputTextMultiline("##source", text, IM_ARRAYSIZE(text), ImVec2(-1, -1), ImGuiInputTextFlags_AllowTabInput);
+
+						std::vector<std::string> store;
+						std::string str(text);
+						std::string sub;
+						if (format_beanfun)
+						{
+							int count = 0;														// separate string count
+							int k = 0;															// separate string start #
+							for (unsigned int i = 0; i < str.size(); i++)
+							{
+								if (str[i] == '\t' || str[i] == '\n')							// use tab or enter to separate
+								{
+									std::string sep;
+									for (unsigned int j = k; j < i; j++)
+									{
+										sep += str[j];
+									}
+									k = i + 1;
+									if (count == 0 || count == 1 || count == 2)					//0:event_name 1:item_name 2:sn
+									{
+										store.push_back(sep);
+									}
+									count++;
+									sep.clear();
+								}
+								if (count == 6)	count = 0;
+							}
+
+						}
+						else if (format_1_to_1)
+						{
+							int k = 0;
+							for (unsigned int i = 0; i < str.size(); i++)
+							{
+								if (str[i] == '\n')												//first step use '\n' to separate sn and others
+								{
+									std::string sep;
+									for (unsigned int j = i - 18; j < i; j++)
+									{
+										sep += str[j];
+									}
+									store.push_back(sep);
+									sep.clear();
+									for (unsigned int j = k; j < i - 18; j++)					//second step separate others by tab if there is one
+									{
+										if(str[j]!='\t')	sep += str[j];
+									}
+									k = i + 1;
+									store.push_back(sep);										//0:sn 1:item_name
+									sep.clear();
+
+								}
+							}
+						}
+						else if (format_1_to_x)
+						{
+							int k = 0;
+							for (unsigned int i = 0; i < str.size(); i++)
+							{
+								if (str[i] == '\n')												//first step use '\n' to separate sn and others
+								{
+									std::string sep;
+									for (unsigned int j = k; j < i; j++)
+									{
+										sep += str[j];
+									}
+									k = i + 1;
+									store.push_back(sep);										//all are sn
+									sep.clear();
+								}
+							}
+						}
+						store1 = store;
+
+						//debug
+						/*for (unsigned int i = 0; i < store.size(); i++)
+						{
+							const char *testa = store[i].c_str();
+							ImGui::Text(testa);
+						}*/
 					}
 				}
-				else
+				else																		// check format
 				{
-					ImGui::Columns(2, "SNlist_cloumn", true, main_cloumn_flags);
-					ImGui::Text(u8"道具名稱");
-					ImGui::NextColumn();
-					ImGui::Text(u8"序號");
-					ImGui::NextColumn();
-					ImGui::Separator();
-
-					for (unsigned int i = 0; i < store1.size(); i++)
+					
+					if (format_beanfun == true)
 					{
-						if (i % 3 == 1 || i % 3 == 2)
+						ImGui::Columns(2, "SNlist_cloumn", true, main_cloumn_flags);
+						ImGui::Text(u8"道具名稱");
+						ImGui::NextColumn();
+						ImGui::Text(u8"序號");
+						ImGui::NextColumn();
+						ImGui::Separator();
+						for (unsigned int i = 0; i < store1.size(); i++)
 						{
+							if (i % 3 == 1 || i % 3 == 2)
+							{
+								const char *testa = store1[i].c_str();
+								ImGui::Text(testa);
+								ImGui::NextColumn();
+								if (i % 3 == 2)	ImGui::Separator();
+							}
+						}
+					}
+					else if(format_1_to_1 == true)
+					{
+						ImGui::Columns(2, "SNlist_cloumn", true, main_cloumn_flags);
+						ImGui::Text(u8"序號");
+						ImGui::NextColumn();
+						ImGui::Text(u8"道具名稱");
+						ImGui::NextColumn();
+						ImGui::Separator();
+						for (unsigned int i = 0; i < store1.size(); i++)
+						{
+							if (i % 2 == 0 || i % 2 == 1)
+							{
+								const char *testa = store1[i].c_str();
+								ImGui::Text(testa);
+								ImGui::NextColumn();
+								if (i % 2 == 1)	ImGui::Separator();
+							}
+						}
+					}
+					else if (format_1_to_x == true)
+					{
+						ImGui::Columns(2, "SNlist_cloumn", true, main_cloumn_flags);
+						ImGui::Text(u8"道具名稱");
+						ImGui::NextColumn();
+						ImGui::Text(u8"序號");
+						ImGui::NextColumn();
+						ImGui::Separator();
+						for (unsigned int i = 0; i < store1.size(); i++)
+						{
+							ImGui::Text(text_item);
+							ImGui::NextColumn();
 							const char *testa = store1[i].c_str();
 							ImGui::Text(testa);
 							ImGui::NextColumn();
-							if (i % 3 == 2)	ImGui::Separator();
+							ImGui::Separator();
 						}
 					}
+				
 				}
 				ImGui::EndChild();
 			}

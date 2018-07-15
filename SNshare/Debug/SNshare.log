@@ -1,18 +1,7 @@
-﻿  imgui_draw.cpp
-  main.cpp
-c:\users\天行\source\repos\snshare\snshare\main.cpp(45): warning C4007: 'WinMain': 必須為 '__stdcall'
-c:\users\天行\source\repos\snshare\snshare\main.cpp(69): warning C4018: '<': signed/unsigned 不相符
-c:\users\天行\source\repos\snshare\snshare\main.cpp(220): warning C4018: '<': signed/unsigned 不相符
-c:\users\天行\source\repos\snshare\snshare\main.cpp(276): warning C4018: '<': signed/unsigned 不相符
-c:\users\天行\source\repos\snshare\snshare\main.cpp(297): warning C4018: '<': signed/unsigned 不相符
-c:\users\天行\source\repos\snshare\snshare\main.cpp(403): warning C4018: '<': signed/unsigned 不相符
-  正在產生程式碼...
-LINK : warning LNK4098: 預設的程式庫 'MSVCRT' 與其他使用的程式庫衝突，請使用 /NODEFAULTLIB:library
+﻿LINK : warning LNK4098: 預設的程式庫 'MSVCRT' 與其他使用的程式庫衝突，請使用 /NODEFAULTLIB:library
 glfw3.lib(init.obj) : warning LNK4217: 本機定義的符號 _vsnprintf 已匯入函式 __glfwInputError
 MSVCRTD.lib(vsnprintf.obj) : warning LNK4049: 本機定義的符號 _vsnprintf 已匯入
 glfw3.lib(context.obj) : warning LNK4217: 本機定義的符號 _sscanf 已匯入函式 _parseVersionString
 MSVCRTD.lib(vsnprintf.obj) : warning LNK4049: 本機定義的符號 __vsnprintf 已匯入
-main.obj : error LNK2019: 無法解析的外部符號 _get_driver_instance 在函式 _WinMain@16 中被參考
-MSVCRTD.lib(exe_main.obj) : error LNK2019: 無法解析的外部符號 _main 在函式 "int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ) 中被參考
-C:\Program Files\MySQL\Connector C++ 1.1\lib\opt\mysqlcppconn.lib : warning LNK4272: 程式庫電腦類型 'x64' 與目標電腦類型 'x86' 發生衝突
-C:\Users\天行\source\repos\SNshare\Debug\SNshare.exe : fatal error LNK1120: 2 個無法解析的外部符號
+main.obj : error LNK2019: 無法解析的外部符號 _get_driver_instance 在函式 _main 中被參考
+C:\Users\天行\source\repos\SNshare\Debug\SNshare.exe : fatal error LNK1120: 1 個無法解析的外部符號
